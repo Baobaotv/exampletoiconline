@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.hocjsp</groupId>
+  <artifactId>hocjspservlet</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>web-logic</module>
+  	<module>web</module>
+  	<module>core-dto</module>
+  	<module>core-data</module>
+  	<module>core-dao</module>
+  	<module>core-dao-impl</module>
+  	<module>core-service</module>
+  	<module>core-service-impl</module>
+  	<module>core-utils</module>
+  </modules>
+</project>
