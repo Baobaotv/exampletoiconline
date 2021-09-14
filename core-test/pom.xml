@@ -4,21 +4,26 @@
     <groupId>com.hocjsp</groupId>
     <artifactId>hocjspservlet</artifactId>
     <version>1.0</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>web</artifactId>
-  <packaging>war</packaging>
-  
+  <artifactId>core-test</artifactId>
   <dependencies>
+  
   	<dependency>
   		<groupId>com.hocjsp</groupId>
-    <artifactId>web-logic</artifactId>
+    <artifactId>core-dao</artifactId>
     <version>1.0</version>
   	</dependency>
+  	
   	<dependency>
   		<groupId>com.hocjsp</groupId>
-    <artifactId>core-peristence-data</artifactId>
+    <artifactId>core-dao-impl</artifactId>
     <version>1.0</version>
   	</dependency>
+  <!-- 	<dependency>
+  		<groupId>com.hocjsp</groupId>
+    <artifactId>core-persistence-data</artifactId>
+    <version>1.0</version>
+  	</dependency> -->
+  	
   </dependencies>
 </project>
