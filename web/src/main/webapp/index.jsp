@@ -1,8 +1,2 @@
-<html>
-<head>
-<title>test</title>
-</head>
-<body>
-<h1>xinchao</h1>
-</body>
-</html>
+<%@include file="/common/taglib.jsp"  %>
+<c:redirect url="/admin-home"></c:redirect>

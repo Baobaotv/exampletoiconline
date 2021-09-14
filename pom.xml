@@ -26,6 +26,8 @@
 		<mysql.version>8.0.13</mysql.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<testng.version>6.14.3</testng.version>
+		<decorator.version>2.4.2</decorator.version>
+		<jstl.version>1.2</jstl.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -53,7 +55,17 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-	
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>sitemesh</artifactId>
+			<version>${decorator.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>
