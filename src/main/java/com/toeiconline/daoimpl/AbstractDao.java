@@ -107,7 +107,7 @@ public class AbstractDao<ID extends Serializable , T> implements GenergicDao<ID,
 		return result;
 	}
 
-	public Object[] findByProperty(String property, Object value, String sortExpression, String sortDirection) {
+	public Object[] findByProperty(String property, Object value, String sortExpression, String sortDirection, Integer offset, Integer limit) {
 		Session session= null;
 		Transaction transaction= null;
 		List<T> results= null;
@@ -132,6 +132,12 @@ public class AbstractDao<ID extends Serializable , T> implements GenergicDao<ID,
 			Query query1= session.createQuery(sql.toString());
 			if(property!=null && value!=null) {
 				query1.setParameter("value", value);
+			}
+			if(offset!=null && offset>=0) {
+				query1.setFirstResult(offset);
+			}
+			if(limit!=null &&limit >0) {
+				query1.setMaxResults(limit);
 			}
 			results = query1.list();
 			count = results.size();
