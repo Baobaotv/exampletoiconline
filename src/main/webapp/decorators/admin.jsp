@@ -25,6 +25,8 @@
 <!-- ace settings handler -->
 <script
 	src="<c:url value='/template/admin/assets/js/ace-extra.min.js'/>"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="<c:url value='/template/admin/assets/scrip/global_admin_scrip.js'/>"></script>
 <dec:head></dec:head>
 </head>
 <body class="no-skin">
@@ -93,6 +95,8 @@
 	<script
 		src="<c:url value='/template/admin/assets/js/ace-elements.min.js'/>"></script>
 	<script src="<c:url value='/template/admin/assets/js/ace.min.js'/>"></script>
+
+	
 	
 </body>
 </html>

@@ -5,6 +5,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -14,16 +16,22 @@ import org.hibernate.Transaction;
 import com.toeiconline.common.constant.Constant;
 import com.toeiconline.common.utils.HibernateUtis;
 import com.toeiconline.dao.GenergicDao;
+import com.toeiconline.persistencedata.ListenGuidelineEntity;
 
 public class AbstractDao<ID extends Serializable , T> implements GenergicDao<ID, T> {
 	
-	private Class<T> persistenceClass;	//tên class
+	private Class<T> persistenceClass;	//tÃªn class
 	public String getPersistenceClassName() {
 		return persistenceClass.getSimpleName();
 	}
 	
 	public AbstractDao() {
-		this.persistenceClass= (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+		try {
+			this.persistenceClass= (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	protected Session getSession() {
@@ -124,7 +132,7 @@ public class AbstractDao<ID extends Serializable , T> implements GenergicDao<ID,
 			}
 			if(sortExpression != null && sortDirection!= null) {
 				sql.append(" order by ").append(sortExpression);
-				if(sortExpression.equals(Constant.SORT_ASC)) {
+				if(sortDirection.equals(Constant.SORT_ASC)) {
 					sql.append(" asc");
 				}else
 					sql.append(" desc");
@@ -140,16 +148,16 @@ public class AbstractDao<ID extends Serializable , T> implements GenergicDao<ID,
 				query1.setMaxResults(limit);
 			}
 			results = query1.list();
-			count = results.size();
-//			sqlCount.append(" from ").append(this.getPersistenceClassName());
-//			if(property!=null && value!=null) {
-//				sqlCount.append(" where ").append(property).append(" = :value");
-//			}
-//			Query query2= session.createQuery(sqlCount.toString());
-//			if(property!=null && value!=null) {
-//				query2.setParameter("value", value);
-//			}
-//			count =  query2.list().get(0);
+//			count = results.size();
+			sqlCount.append(" from ").append(this.getPersistenceClassName());
+			if(property!=null && value!=null) {
+				sqlCount.append(" where ").append(property).append(" = :value");
+			}
+			Query query2= session.createQuery(sqlCount.toString());
+			if(property!=null && value!=null) {
+				query2.setParameter("value", value);
+			}
+			count =  query2.list().get(0);
 		} catch (HibernateException e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -217,6 +225,84 @@ public class AbstractDao<ID extends Serializable , T> implements GenergicDao<ID,
 		}
 		return count;
 	}
+
+	@Override
+	public Object[] findByProperty(Map<String, Object> property, String sortExpression, String sortDirection,
+			Integer offset, Integer limit) {
+		Session session= null;
+		Transaction transaction= null;
+		List<T> results= null;
+		Object count= 0;
+		StringBuilder sql= new StringBuilder();
+		StringBuilder sqlCount= new StringBuilder("select count(*) ");
+		
+		try {
+			session = getSession();
+			transaction= session.beginTransaction();
+			sql.append("from ");
+			sql.append(this.getPersistenceClassName());
+			if(!Objects.isNull(property)) {
+				int i=0;
+				for(Map.Entry<String, Object> item : property.entrySet()) {
+					if(i==0) {
+						sql.append(" where ").append(item.getKey()).append(" = :"+item.getKey());
+						i=i+1;
+					}
+					else {
+						sql.append(" and ").append(item.getKey()).append(" = :"+item.getKey());
+					}
+				}
+			}
+			sqlCount.append(sql);
+			if(sortExpression != null && sortDirection!= null) {
+				sql.append(" order by ").append(sortExpression);
+				if(sortDirection.equals(Constant.SORT_ASC)) {
+					sql.append(" asc");
+				}else
+					sql.append(" desc");
+			}
+			Query query1= session.createQuery(sql.toString());
+			Query query2= session.createQuery(sqlCount.toString());
+			if(!Objects.isNull(property)) {
+				int i=0;
+				for(Map.Entry<String, Object> item : property.entrySet()) {
+					query1.setParameter(item.getKey(), item.getValue());
+					query2.setParameter(item.getKey(), item.getValue());
+				}
+			}
+			if(offset!=null && offset>=0) {
+				query1.setFirstResult(offset);
+			}
+			if(limit!=null &&limit >0) {
+				query1.setMaxResults(limit);
+			}
+			results = query1.list();
+			count =  query2.list().get(0);
+//			count = results.size();
+//			sqlCount.append(" from ").append(this.getPersistenceClassName());
+//			if(property!=null && value!=null) {
+//				sqlCount.append(" where ").append(property).append(" = :value");
+//			}
+//			Query query2= session.createQuery(sqlCount.toString());
+//			if(property!=null && value!=null) {
+//				query2.setParameter("value", value);
+//			}
+			
+		} catch (HibernateException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally {
+			session.close();
+		}
+		return new Object[] {count, results};
+	}
+	
+//	public static void main(String[] args) {
+//		GenergicDao<Integer, ListenGuidelineEntity> dao = new AbstractDao<Integer, ListenGuidelineEntity>();
+//		Object[] value = dao.findByProperty(null, null, null, null, null);
+//		System.out.println("xong");
+//	}
 
 
 }
